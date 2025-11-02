@@ -1,12 +1,31 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
+-- Tema customizado estilo "Marte + amarelo"
+local CustomTheme = {
+    WindowBackground = Color3.fromRGB(27,15,15), -- Fundo principal
+    MainFrame = Color3.fromRGB(27,15,15),
+    Accent = Color3.fromRGB(255,184,77), -- Bordas e acentos
+    Toggle = Color3.fromRGB(44,10,10), -- Botões
+    ToggleAccent = Color3.fromRGB(255,99,71), -- Hover ou destaque
+    Slider = Color3.fromRGB(255,69,0), -- Slider fill
+    SliderAccent = Color3.fromRGB(255,215,0), -- Slider hover
+    SectionBackground = Color3.fromRGB(27,15,15),
+    TextColor = Color3.fromRGB(255,255,255), -- Texto principal
+    TextColorDark = Color3.fromRGB(255,199,0), -- Texto secundário
+    Dropdown = Color3.fromRGB(44,10,10),
+    DropdownAccent = Color3.fromRGB(255,184,77),
+    BindColor = Color3.fromRGB(255,184,77),
+    InputFieldBackground = Color3.fromRGB(27,15,15),
+    InputFieldAccent = Color3.fromRGB(255,184,77)
+}
+
 local Window = Rayfield:CreateWindow({
    Name = "Felicity Hub",
    Icon = 0,
    LoadingTitle = "Felicity Hub said hello!",
    LoadingSubtitle = "by Majin/Griiem",
    ShowText = "Felicity",
-   Theme = "Ocean",
+   Theme = CustomTheme, -- Aqui aplicamos o tema customizado
    ToggleUIKeybind = "H",
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false,
