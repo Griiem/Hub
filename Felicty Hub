@@ -1,12 +1,12 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Felicty Hub",
+   Name = "Felicity Hub",
    Icon = 107543713251715, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Felicity Hub said hello!",
    LoadingSubtitle = "by Majin/Griiem",
    ShowText = "Felicity Hub", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "AmberGlow", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
@@ -15,13 +15,13 @@ local Window = Rayfield:CreateWindow({
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
+      FolderName = "felicity", -- Create a custom folder for your hub/game
+      FileName = "Felicity Hub"
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "Y4br4PhQs2", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
    },
 
@@ -36,3 +36,34 @@ local Window = Rayfield:CreateWindow({
       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
    }
 })
+
+local function checkDiscordMembership(userId)
+   local response = game:GetService("HttpService"):GetAsync("https://discordapp.com/api/v6/users/" .. userId .. "/guilds")
+   local data = game:GetService("HttpService"):JSONDecode(response)
+   for _, guild in ipairs(data) do
+      if guild.id == "1434497528388386866" then
+         return true
+      end
+   end
+   return false
+end
+
+local function onDiscordJoin()
+   local userId = game.Players.LocalPlayer.UserId
+   if checkDiscordMembership(userId) then
+      -- Permitir o uso do script
+   else
+      -- Bloquear o uso do script
+      Rayfield:Notify({
+         Title = "Error",
+         Content = "You must join the Discord server to use this script.",
+         Duration = 5,
+         Image = 6835585895,
+         Actions = { { Name = "Ok", Callback = function() end } }
+      })
+   end
+end
+
+Window:OnDiscordJoin(onDiscordJoin)
+
+return Window
