@@ -6,7 +6,7 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "Felicity Hub said hello!",
    LoadingSubtitle = "by Majin/Griiem",
    ShowText = "Felicity",
-   Theme = "Green",
+   Theme = "Ocean",
    ToggleUIKeybind = "H",
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false,
@@ -32,18 +32,20 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
+-- ///////////////////////
+-- MOVEMENT TAB
+-- ///////////////////////
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-local walkSpeed = 16 -- valor inicial
-local speedEnabled = false -- toggle que liga/desliga a WS
+local walkSpeed = 16
+local speedEnabled = false
 
--- cria a aba e seção
-local Tab = Window:CreateTab("Movement", 107543713251715)
-local Section = Tab:CreateSection("Player Movement")
+local TabMovement = Window:CreateTab("Movement", 107543713251715)
+local SectionMovement = TabMovement:CreateSection("Player Movement")
 
--- Toggle para ativar/desativar a velocidade
-Section:CreateToggle({
+SectionMovement:CreateToggle({
     Name = "Enable Speed",
     CurrentValue = false,
     Flag = "EnableSpeed",
@@ -55,8 +57,7 @@ Section:CreateToggle({
     end
 })
 
--- Input para digitar o WS desejado
-Section:CreateInput({
+SectionMovement:CreateInput({
     Name = "WalkSpeed",
     CurrentValue = "16",
     PlaceholderText = "Digite o WS desejado",
@@ -78,10 +79,132 @@ Section:CreateInput({
     end
 })
 
--- Aplica automaticamente ao respawn
 LocalPlayer.CharacterAdded:Connect(function(char)
     char:WaitForChild("Humanoid")
     if speedEnabled then
         char.Humanoid.WalkSpeed = walkSpeed
     end
+end)
+
+-- ///////////////////////
+-- ESP TAB
+-- ///////////////////////
+
+local TabESP = Window:CreateTab("ESP", 107543713251715)
+local SectionESP = TabESP:CreateSection("Player ESP")
+
+local espSettings = {
+    name = true,
+    box = false,
+    health = false,
+    distance = false,
+    color = Color3.fromRGB(255,255,255)
+}
+
+local espGuis = {}
+
+local function createESP(player)
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    
+    local esp = Instance.new("BillboardGui")
+    esp.Name = "FelicityESP"
+    esp.Parent = char
+    esp.Adornee = hrp
+    esp.AlwaysOnTop = true
+    esp.Size = UDim2.new(0, 200, 0, 50)
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundTransparency = 1
+    frame.BorderSizePixel = 0
+    frame.Parent = esp
+    
+    -- Name
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Text = player.DisplayName
+    nameLabel.Size = UDim2.new(1,0,0.5,0)
+    nameLabel.Position = UDim2.new(0,0,0,0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Font = Enum.Font.SourceSansBold
+    nameLabel.TextSize = 20
+    nameLabel.TextColor3 = espSettings.color
+    nameLabel.Parent = frame
+    nameLabel.Visible = espSettings.name
+
+    -- Box (exemplo simples)
+    local box = Instance.new("Frame")
+    box.Size = UDim2.new(0,50,0,50)
+    box.Position = UDim2.new(0.5,-25,0.5,-25)
+    box.BackgroundTransparency = 0.5
+    box.BorderSizePixel = 1
+    box.BackgroundColor3 = espSettings.color
+    box.Parent = frame
+    box.Visible = espSettings.box
+
+    -- Aqui você poderia adicionar health/distance
+
+    espGuis[player] = {gui = esp, nameLabel = nameLabel, box = box}
+end
+
+local function updateESP(player)
+    local guiData = espGuis[player]
+    if guiData then
+        guiData.nameLabel.Visible = espSettings.name
+        guiData.nameLabel.TextColor3 = espSettings.color
+        guiData.box.Visible = espSettings.box
+        guiData.box.BackgroundColor3 = espSettings.color
+        -- Atualiza health/distance se quiser
+    end
+end
+
+-- Toggle Name
+SectionESP:CreateToggle({
+    Name = "Show Name",
+    CurrentValue = true,
+    Flag = "ESP_Name",
+    Callback = function(Value)
+        espSettings.name = Value
+        for player, _ in pairs(espGuis) do
+            updateESP(player)
+        end
+    end
+})
+
+-- Toggle Box
+SectionESP:CreateToggle({
+    Name = "Show Box",
+    CurrentValue = false,
+    Flag = "ESP_Box",
+    Callback = function(Value)
+        espSettings.box = Value
+        for player, _ in pairs(espGuis) do
+            updateESP(player)
+        end
+    end
+})
+
+-- ColorPicker
+SectionESP:CreateColorPicker({
+    Name = "ESP Color",
+    Default = Color3.fromRGB(255,255,255),
+    Flag = "ESP_Color",
+    Callback = function(Color)
+        espSettings.color = Color
+        for player, _ in pairs(espGuis) do
+            updateESP(player)
+        end
+    end
+})
+
+-- Cria ESP pra todos jogadores atuais
+for _, player in ipairs(game.Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        createESP(player)
+    end
+end
+
+-- Quando novo jogador entra
+game.Players.PlayerAdded:Connect(function(player)
+    createESP(player)
 end)
