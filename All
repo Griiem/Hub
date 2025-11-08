@@ -1,0 +1,11 @@
+-- By Majin/Griiem
+
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/Griiem/Hub/refs/heads/main/RayThemes"))()
+
+local WindowSettings = loadstring(game:HttpGet("https://raw.githubusercontent.com/Griiem/Hub/refs/heads/main/RayWindow"))()
+
+WindowSettings.Theme = Theme
+
+local Window = Rayfield:CreateWindow(WindowSettings)
