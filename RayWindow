@@ -1,0 +1,39 @@
+-- By Majin/Griiem
+
+return {
+   Name = "Majin Hub",
+   Icon = 0,
+   LoadingTitle = "Majin Hub said hello!",
+   LoadingSubtitle = "by Majin/Griiem",
+   ShowText = "Majin",
+
+   Theme = nil, -- vai ser preenchido no script principal
+
+   ToggleUIKeybind = "G",
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false,
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "majin",
+      FileName = "MajinHub"
+   },
+
+   Discord = {
+      Enabled = true,
+      Invite = "Y4br4PhQs2",
+      RememberJoins = true
+   },
+
+   KeySystem = false,
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+}
